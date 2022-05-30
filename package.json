@@ -1,0 +1,42 @@
+{
+  "name": "forkify_personal_project",
+  "version": "1.0.0",
+  "description": "this is cooking recipe app inspired from Jonas Schmedtmann",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve --config webpack.config.js --open",
+    "watch": "webpack --watch",
+    "build": "NODE_ENV=production webpack --config webpack.config.js",
+    "build-dev": "webpack --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ap-limon/Forkify_personal_project.git"
+  },
+  "author": "Jonas Schmedtmann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ap-limon/Forkify_personal_project/issues"
+  },
+  "homepage": "https://github.com/ap-limon/Forkify_personal_project#readme",
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@squoosh/lib": "^0.4.0",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "html-loader": "^3.1.0",
+    "html-webpack-plugin": "^5.5.0",
+    "image-minimizer-webpack-plugin": "^3.2.3",
+    "mini-css-extract-plugin": "^2.6.0",
+    "postcss": "^8.4.14",
+    "postcss-loader": "^7.0.0",
+    "postcss-preset-env": "^7.6.0",
+    "sass": "^1.52.1",
+    "sass-loader": "^13.0.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.0"
+  }
+}
