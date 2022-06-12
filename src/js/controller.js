@@ -24,19 +24,39 @@ const renderSpinner = (parentEl) => {
 
   parentEl.innerHTML = "";
   parentEl.insertAdjacentHTML("afterbegin", markUp);
-}
+};
+
+const renderError = (parentEl, message) => {
+  let markUp = `
+  <div class="error">
+    <div>
+      <svg>
+        <use href="${icons}#icon-alert-triangle"></use>
+      </svg>
+    </div>
+    <p>${message} 😔😔😔 No recipes found for your ID. Please try again</p>
+  </div>
+  `;
+
+  parentEl.innerHTML = "";
+  parentEl.insertAdjacentHTML("afterbegin", markUp);
+};
 
 const showRecipe = async function () {
-  let id = window.location.hash.slice(1);
-  if (!id) return;
-  
-  renderSpinner(recipeContainer);
-  const data = await fetch(
-    `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`
-  ).then((res) => res.json());
-  const { recipe } = data.data;
+  try {
+    let id = window.location.hash.slice(1);
+    if (!id) return;
 
-  let markUp = `
+    renderSpinner(recipeContainer);
+    const data = await fetch(
+      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`
+    ).then((res) => res.json());
+    if (data.status === "fail") {
+      throw data.message;
+    }
+    const { recipe } = data.data;
+
+    let markUp = `
   <figure class="recipe__fig">
     <img
       src=${recipe.image_url}
@@ -138,10 +158,13 @@ const showRecipe = async function () {
   </div>
   `;
 
-  recipeContainer.innerHTML = " ";
-  recipeContainer.insertAdjacentHTML("afterbegin", markUp);
+    recipeContainer.innerHTML = " ";
+    recipeContainer.insertAdjacentHTML("afterbegin", markUp);
+  } catch (err) {
+    renderError(recipeContainer, err)
+  }
 };
 
-["hashchange", "load"].forEach(ev => {
-  window.addEventListener(ev, showRecipe)
-})
+["hashchange", "load"].forEach((ev) => {
+  window.addEventListener(ev, showRecipe);
+});
