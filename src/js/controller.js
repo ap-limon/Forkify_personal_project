@@ -3,6 +3,7 @@ import RecipeView from "./views/recipeView";
 import SearchView from "./views/searchView";
 import "../scss/main.scss";
 import ResultsView from "./views/ResultsView";
+import PaginationView from "./views/PaginationView";
 // const recipeContainer = document.querySelector(".recipe");
 
 // const timeout = function (s) {
@@ -38,11 +39,19 @@ const controlSearchResults = async function() {
     ResultsView.renderSpinner();
     await model.loadSearchResults(query);
     
-    ResultsView.render(model.state.search.results);
+    ResultsView.render(model.getSearchResult());
+
+    PaginationView.render(model.state.search);
   } catch (err) {
     ResultsView.renderError(err);
   }
 }
 
+const controlPagination = function (gotoPage) {
+  ResultsView.render(model.getSearchResult(gotoPage));
+  PaginationView.render(model.state.search);
+}
+
 RecipeView.addHandlerRender(controlRecipe);
+PaginationView.addEventHandlerClick(controlPagination);
 SearchView.addSearchHandler(controlSearchResults);
