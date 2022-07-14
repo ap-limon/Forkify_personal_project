@@ -40,6 +40,27 @@ class View {
     this._clean();
     this._parentEl.insertAdjacentHTML("afterbegin", markUp);
   }
+
+  update(data) {
+    this._data = data;
+    const newMarkUp = this._generateMarkUp();
+
+    const newDOM = document.createRange().createContextualFragment(newMarkUp);
+    const newEl = Array.from(newDOM.querySelectorAll("*"));
+    const curEl = Array.from(this._parentEl.querySelectorAll("*"));
+
+    newEl.forEach((nEl, i) => {
+      const cEl = curEl[i];
+
+      if (!nEl.isEqualNode(cEl) && nEl.firstChild?.nodeValue.trim() !== "") {
+        cEl.textContent = nEl.textContent;
+      }
+
+      if (!nEl.isEqualNode(cEl)) {
+        Array.from(nEl.attributes).forEach(attr => cEl.setAttribute(attr.name, attr.value));
+      }
+    });
+  }
 }
 
 export default View;

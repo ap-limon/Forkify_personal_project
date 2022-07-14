@@ -18,40 +18,52 @@ import PaginationView from "./views/PaginationView";
 
 ///////////////////////////////////////
 
+
+const controlSearchResults = async function () {
+  try {
+    let query = SearchView.getQuery();
+    if (!query) return;
+    
+    ResultsView.renderSpinner();
+    await model.loadSearchResults(query);
+
+    ResultsView.render(model.getSearchResult());
+    
+    PaginationView.render(model.state.search);
+  } catch (err) {
+    ResultsView.renderError(err);
+  }
+};
+
 const controlRecipe = async function () {
   try {
     let id = window.location.hash.slice(1);
     if (!id) return;
 
     RecipeView.renderSpinner();
+
+    ResultsView.update(model.getSearchResult())
+
     await model.loadRecipe(id);
     RecipeView.render(model.state.recipe);
   } catch (err) {
     RecipeView.renderError();
+    console.error(err);
   }
-}
+};
 
-const controlSearchResults = async function() {
-  try {
-    let query = SearchView.getQuery();
-    if (!query) return;
-
-    ResultsView.renderSpinner();
-    await model.loadSearchResults(query);
-    
-    ResultsView.render(model.getSearchResult());
-
-    PaginationView.render(model.state.search);
-  } catch (err) {
-    ResultsView.renderError(err);
-  }
+const controlServings = function (newServings) {
+  model.updateServings(newServings);
+  
+  RecipeView.update(model.state.recipe);
 }
 
 const controlPagination = function (gotoPage) {
   ResultsView.render(model.getSearchResult(gotoPage));
   PaginationView.render(model.state.search);
-}
+};
 
 RecipeView.addHandlerRender(controlRecipe);
+RecipeView.addHandlerUpdateServings(controlServings);
 PaginationView.addEventHandlerClick(controlPagination);
 SearchView.addSearchHandler(controlSearchResults);

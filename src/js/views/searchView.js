@@ -1,7 +1,6 @@
 class SearchView {
     #parentEl = document.querySelector(".search");
 
-
     _clearInput() {
         this.#parentEl.querySelector(".search__field").value = "";
     }

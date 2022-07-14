@@ -7,11 +7,13 @@ class ResultsView extends View {
   _parentEl = document.querySelector(".results");
 
   _generateMarkUp() {
+    let id = window.location.hash.slice(1);
+
     return this._data
       .map((rec) => {
         return `
         <li class="preview">
-            <a href="#${rec.id}" class="preview__link preview__link__active">
+            <a href="#${rec.id}" class="${rec.id === id ? "preview__link--active" : ""} preview__link">
                 <figure class="preview__fig">
                 <img
                     src="${rec.image_url}"
