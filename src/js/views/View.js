@@ -35,6 +35,7 @@ class View {
   }
 
   render(data) {
+    if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
     this._data = data;
     let markUp = this._generateMarkUp();
     this._clean();

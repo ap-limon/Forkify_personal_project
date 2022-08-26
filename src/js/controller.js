@@ -1,9 +1,10 @@
 import * as model from "./model";
-import RecipeView from "./views/recipeView";
+import RecipeView from "./views/RecipeView";
 import SearchView from "./views/searchView";
 import "../scss/main.scss";
 import ResultsView from "./views/ResultsView";
 import PaginationView from "./views/PaginationView";
+import BookmarksView from "./views/BookmarksView";
 // const recipeContainer = document.querySelector(".recipe");
 
 // const timeout = function (s) {
@@ -21,10 +22,11 @@ import PaginationView from "./views/PaginationView";
 
 const controlSearchResults = async function () {
   try {
+    ResultsView.renderSpinner();
+
     let query = SearchView.getQuery();
     if (!query) return;
     
-    ResultsView.renderSpinner();
     await model.loadSearchResults(query);
 
     ResultsView.render(model.getSearchResult());
@@ -42,7 +44,9 @@ const controlRecipe = async function () {
 
     RecipeView.renderSpinner();
 
-    ResultsView.update(model.getSearchResult())
+    ResultsView.update(model.getSearchResult());
+
+    BookmarksView.update(model.state.bookmarks);
 
     await model.loadRecipe(id);
     RecipeView.render(model.state.recipe);
@@ -58,12 +62,30 @@ const controlServings = function (newServings) {
   RecipeView.update(model.state.recipe);
 }
 
+const controlUpdateBookmarks = function () {
+  if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
+  else model.deleteBookmark(model.state.recipe.id);
+
+  RecipeView.update(model.state.recipe);
+
+  BookmarksView.render(model.state.bookmarks);
+}
+
+const controlBookmarks = function () {
+  BookmarksView.render(model.state.bookmarks);
+}
+
 const controlPagination = function (gotoPage) {
   ResultsView.render(model.getSearchResult(gotoPage));
   PaginationView.render(model.state.search);
 };
 
-RecipeView.addHandlerRender(controlRecipe);
-RecipeView.addHandlerUpdateServings(controlServings);
-PaginationView.addEventHandlerClick(controlPagination);
-SearchView.addSearchHandler(controlSearchResults);
+(function () {
+  SearchView.addSearchHandler(controlSearchResults);
+  RecipeView.addHandlerRender(controlRecipe);
+  RecipeView.addHandlerUpdateServings(controlServings);
+  RecipeView.addHandlerUpdateBookmark(controlUpdateBookmarks);
+  BookmarksView.addHandlerRender(controlBookmarks);
+  PaginationView.addEventHandlerClick(controlPagination);
+}
+)()
