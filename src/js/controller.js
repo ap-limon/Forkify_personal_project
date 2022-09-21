@@ -5,6 +5,7 @@ import "../scss/main.scss";
 import ResultsView from "./views/ResultsView";
 import PaginationView from "./views/PaginationView";
 import BookmarksView from "./views/BookmarksView";
+import AddRecipeView from "./views/AddRecipeView";
 // const recipeContainer = document.querySelector(".recipe");
 
 // const timeout = function (s) {
@@ -33,7 +34,7 @@ const controlSearchResults = async function () {
     
     PaginationView.render(model.state.search);
   } catch (err) {
-    ResultsView.renderError(err);
+    console.error();
   }
 };
 
@@ -51,7 +52,6 @@ const controlRecipe = async function () {
     await model.loadRecipe(id);
     RecipeView.render(model.state.recipe);
   } catch (err) {
-    RecipeView.renderError();
     console.error(err);
   }
 };
@@ -80,6 +80,28 @@ const controlPagination = function (gotoPage) {
   PaginationView.render(model.state.search);
 };
 
+const controlUploadRecipe = async function (newRecipe) {
+  try {
+    AddRecipeView.renderSpinner();
+    await model.uploadRecipe(newRecipe);
+
+    RecipeView.render(model.state.recipe);
+
+    AddRecipeView.renderMessage();
+
+    BookmarksView.render(model.state.bookmarks);
+
+    window.history.pushState(null, "", `#${model.state.recipe.id}`);
+
+    setTimeout(function () {
+      AddRecipeView.toggleWindow();
+    }, 3000);
+  } catch (err) {
+    console.error(err);
+    AddRecipeView.renderError(err);
+  }
+};
+
 (function () {
   SearchView.addSearchHandler(controlSearchResults);
   RecipeView.addHandlerRender(controlRecipe);
@@ -87,5 +109,6 @@ const controlPagination = function (gotoPage) {
   RecipeView.addHandlerUpdateBookmark(controlUpdateBookmarks);
   BookmarksView.addHandlerRender(controlBookmarks);
   PaginationView.addEventHandlerClick(controlPagination);
+  AddRecipeView.addHandlerUpload(controlUploadRecipe);
 }
 )()

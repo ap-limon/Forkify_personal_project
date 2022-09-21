@@ -19,7 +19,7 @@ class View {
     this._parentEl.insertAdjacentHTML("afterbegin", markUp);
   }
 
-  renderError() {
+  renderError(error = this._errorMessage) {
     let markUp = `
     <div class="error">
         <div>
@@ -27,15 +27,32 @@ class View {
             <use href="${icons}#icon-alert-triangle"></use>
         </svg>
         </div>
-        <p>${this._errorMessage}</p>
+        <p>${error}</p>
     </div>
     `;
     this._clean();
     this._parentEl.insertAdjacentHTML("afterbegin", markUp);
   }
 
+  renderMessage(message=this._message) {
+    const markUp = `
+    <div class="message">
+      <div>
+        <svg>
+          <use href="${icons}#icon-smile"></use>
+        </svg>
+      </div>
+      <p>${message}</p>
+    </div
+    `;
+
+    this._clean();
+    this._parentEl.insertAdjacentHTML("afterbegin", markUp);
+  }
+
   render(data) {
     if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
+    
     this._data = data;
     let markUp = this._generateMarkUp();
     this._clean();
