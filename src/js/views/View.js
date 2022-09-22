@@ -50,11 +50,14 @@ class View {
     this._parentEl.insertAdjacentHTML("afterbegin", markUp);
   }
 
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
     
     this._data = data;
     let markUp = this._generateMarkUp();
+
+    if (!render) return markUp;
+
     this._clean();
     this._parentEl.insertAdjacentHTML("afterbegin", markUp);
   }

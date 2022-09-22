@@ -6,19 +6,7 @@ import ResultsView from "./views/ResultsView";
 import PaginationView from "./views/PaginationView";
 import BookmarksView from "./views/BookmarksView";
 import AddRecipeView from "./views/AddRecipeView";
-// const recipeContainer = document.querySelector(".recipe");
-
-// const timeout = function (s) {
-//   return new Promise(function (_, reject) {
-//     setTimeout(function () {
-//       reject(new Error(`Request took too long! Timeout after ${s} second`));
-//     }, s * 1000);
-//   });
-// };
-
-// https://forkify-api.herokuapp.com/v2
-
-///////////////////////////////////////
+import { MODAL_CLOSE_SEC } from "./config";
 
 
 const controlSearchResults = async function () {
@@ -95,7 +83,7 @@ const controlUploadRecipe = async function (newRecipe) {
 
     setTimeout(function () {
       AddRecipeView.toggleWindow();
-    }, 3000);
+    }, MODAL_CLOSE_SEC * 1000);
   } catch (err) {
     console.error(err);
     AddRecipeView.renderError(err);

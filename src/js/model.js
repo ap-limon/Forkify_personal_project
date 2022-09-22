@@ -1,12 +1,30 @@
+import { API, KEY, RES_PER_PAGE } from "./config";
+import { AJAX } from "./helper";
+
 export const state = {
   recipe: {},
   search: {
     query: "",
     results: [],
     page: 1,
-    resultsPerPage: 10,
+    resultsPerPage: RES_PER_PAGE,
   },
   bookmarks: [],
+};
+
+const createRecipeObject = function (data) {
+  const { recipe } = data.data;
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    publisher: recipe.publisher,
+    sourceUrl: recipe.source_url,
+    image_url: recipe.image_url,
+    servings: recipe.servings,
+    cooking_time: recipe.cooking_time,
+    ingredients: recipe.ingredients,
+    ...(recipe.key && { key: recipe.key }),
+  };
 };
 
 export const getSearchResult = function (page = state.search.page) {
@@ -20,10 +38,9 @@ export const getSearchResult = function (page = state.search.page) {
 
 export const loadSearchResults = async function (query) {
   try {
-    state.query = query;
-    const data = await fetch(
-      `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}&key=ae0cef27-38c5-4736-8c2a-2f381e8b0688`
-    ).then((res) => res.json());
+    state.search.query = query;
+
+    const data = await AJAX(`${API}?search=${query}&key=${KEY}`);
 
     state.search.results = data.data.recipes.map((rec) => {
       return {
@@ -31,7 +48,7 @@ export const loadSearchResults = async function (query) {
         image_url: rec.image_url,
         title: rec.title,
         publisher: rec.publisher,
-        ...(rec.key && {key: rec.key})
+        ...(rec.key && { key: rec.key }),
       };
     });
 
@@ -43,29 +60,15 @@ export const loadSearchResults = async function (query) {
 
 export const loadRecipe = async function (id) {
   try {
-    const data = await fetch(
-      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`
-    ).then((res) => res.json());
-    if (data.status === "fail") throw new Error();
+    const data = await AJAX(`${API}${id}?key=${KEY}`);
 
-    const { recipe } = data.data;
-
-    state.recipe = {
-      publisher: recipe.publisher,
-      ingredients: recipe.ingredients,
-      source_url: recipe.source_url,
-      image_url: recipe.image_url,
-      title: recipe.title,
-      servings: recipe.servings,
-      cooking_time: recipe.cooking_time,
-      id: recipe.id,
-      ...(recipe.key && { key: recipe.key }),
-    };
+    state.recipe = createRecipeObject(data);
 
     if (state.bookmarks.some((bookmark) => bookmark.id === id))
       state.recipe.bookmarked = true;
     else state.recipe.bookmarked = false;
   } catch (err) {
+    console.error(err);
     throw err;
   }
 };
@@ -117,35 +120,11 @@ export const uploadRecipe = async function (newRecipe) {
       ingredients,
     };
 
-    const data = await fetch(
-      "https://forkify-api.herokuapp.com/api/v2/recipes?key=ae0cef27-38c5-4736-8c2a-2f381e8b0688",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(uploadingRecipe),
-      }
-    ).then((res) => res.json());
-    if (data.status === "fail") throw new Error(`${data.message}`);
+    const data = await AJAX(`${API}?key=${KEY}`, uploadingRecipe);
 
-    const { recipe } = data.data;
-
-    state.recipe = {
-      publisher: recipe.publisher,
-      ingredients: recipe.ingredients,
-      source_url: recipe.source_url,
-      image_url: recipe.image_url,
-      title: recipe.title,
-      servings: recipe.servings,
-      cooking_time: recipe.cooking_time,
-      id: recipe.id,
-      ...(recipe.key && {key: recipe.key}),
-    };
+    state.recipe = createRecipeObject(data);
 
     addBookmark(state.recipe);
-    console.log(state.recipe);
-
   } catch (err) {
     throw `🔥🔥${err}`;
   }
