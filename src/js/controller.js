@@ -8,7 +8,6 @@ import BookmarksView from "./views/BookmarksView";
 import AddRecipeView from "./views/AddRecipeView";
 import { MODAL_CLOSE_SEC } from "./config";
 
-
 const controlSearchResults = async function () {
   try {
     ResultsView.renderSpinner();

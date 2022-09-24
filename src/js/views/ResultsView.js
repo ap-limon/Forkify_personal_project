@@ -1,4 +1,3 @@
-import icons from "../../img/icons.svg";
 import PreviewView from "./PreviewView";
 import View from "./View";
 
