@@ -1,5 +1,5 @@
 .search-results {
-  padding: 3rem 0;
+  padding: 1rem 0;
   display: flex;
   flex-direction: column;
 }
@@ -7,11 +7,17 @@
 .results {
   list-style: none;
   margin-bottom: 2rem;
+
+  .preview {
+    margin: 10px 0;
+  }
 }
 
 .pagination {
   margin-top: auto;
   padding: 0 3.5rem;
+  display: flex;
+  flex-direction: row-reverse;
 
   &::after {
     content: "";
@@ -19,14 +25,14 @@
     clear: both;
   }
 
-  &__btn {
-    &--prev {
-      float: left;
-    }
-    &--next {
-      float: right;
-    }
-  }
+  // &__btn {
+  //   &--prev {
+  //     float: left;
+  //   }
+  //   &--next {
+  //     float: right;
+  //   }
+  // }
 }
 
 .copyright {

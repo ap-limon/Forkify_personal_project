@@ -44,6 +44,7 @@
     font-weight: 600;
     padding: 1.25rem 2.25rem;
     text-decoration: none;
+    margin: auto;
 
     svg {
       height: 1.75rem;
@@ -54,6 +55,7 @@
 }
 
 .btn--inline {
+  margin: 0 auto;
   color: $color-primary;
   font-size: 1.3rem;
   font-weight: 600;

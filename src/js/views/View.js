@@ -10,9 +10,9 @@ class View {
   renderSpinner() {
     let markUp = `
     <div class="spinner">
-        <svg>
+      <svg>
         <use href="${icons}#icon-loader"></use>
-        </svg>
+      </svg>
     </div>
     `;
     this._clean();
@@ -68,9 +68,13 @@ class View {
 
     const newDOM = document.createRange().createContextualFragment(newMarkUp);
     const newEl = Array.from(newDOM.querySelectorAll("*"));
+
     const curEl = Array.from(this._parentEl.querySelectorAll("*"));
+    
+    if (curEl.length === 0) return;
 
     newEl.forEach((nEl, i) => {
+      
       const cEl = curEl[i];
 
       if (!nEl.isEqualNode(cEl) && nEl.firstChild?.nodeValue.trim() !== "") {

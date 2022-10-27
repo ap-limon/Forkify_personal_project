@@ -1,12 +1,13 @@
 import * as model from "./model";
 import RecipeView from "./views/RecipeView";
-import SearchView from "./views/searchView";
+import SearchView from "./views/SearchView";
 import "../scss/main.scss";
 import ResultsView from "./views/ResultsView";
 import PaginationView from "./views/PaginationView";
 import BookmarksView from "./views/BookmarksView";
 import AddRecipeView from "./views/AddRecipeView";
 import { MODAL_CLOSE_SEC } from "./config";
+import FilterView from "./views/FilterView";
 
 const controlSearchResults = async function () {
   try {
@@ -18,12 +19,31 @@ const controlSearchResults = async function () {
     await model.loadSearchResults(query);
 
     ResultsView.render(model.getSearchResult());
-    
+
+    FilterView.render();
     PaginationView.render(model.state.search);
   } catch (err) {
-    console.error();
+    console.error(err);
+    ResultsView.renderError();
   }
 };
+
+const controlFiltering = async function (filterBy) {
+  try {
+    if (filterBy === "filterByCT") {
+      ResultsView.renderSpinner();
+      await model.filterByCT(model.state.search.results)
+      ResultsView.render(model.getSearchResult())
+    };
+    if (filterBy === "filterByIng") {
+      ResultsView.renderSpinner();
+      await model.filterByIng(model.state.search.results)
+      ResultsView.render(model.getSearchResult())
+    };
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 const controlRecipe = async function () {
   try {
@@ -40,6 +60,7 @@ const controlRecipe = async function () {
     RecipeView.render(model.state.recipe);
   } catch (err) {
     console.error(err);
+    RecipeView.renderError();
   }
 };
 
@@ -91,6 +112,8 @@ const controlUploadRecipe = async function (newRecipe) {
 
 (function () {
   SearchView.addSearchHandler(controlSearchResults);
+  FilterView.addHandlerFilterbyCT(controlFiltering);
+  FilterView.addHandlerFilterbyIng(controlFiltering)
   RecipeView.addHandlerRender(controlRecipe);
   RecipeView.addHandlerUpdateServings(controlServings);
   RecipeView.addHandlerUpdateBookmark(controlUpdateBookmarks);

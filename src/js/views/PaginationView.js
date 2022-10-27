@@ -6,7 +6,7 @@ class PaginationView extends View {
 
   addEventHandlerClick(handler) {
     this._parentEl.addEventListener("click", function (e) {
-      const btn = e.target.closest(".btn--inline");
+      const btn = e.target.closest(".page-btn");
       if (!btn) return;
 
       const gotoPage = +btn.dataset.goto;
@@ -19,25 +19,58 @@ class PaginationView extends View {
     let numPage = Math.ceil(
       this._data.results.length / this._data.resultsPerPage
     );
+    let numOfRestPage = `${curPage} out of ${numPage}`;
 
     if (curPage === 1 && numPage > 1) {
       return `
         <button data-goto=${
           curPage + 1
-        } class="btn--inline pagination__btn--next">
+        } class="btn--inline page-btn pagination__btn--next">
             <span>page ${curPage + 1}</span>
             <svg class="search__icon">
               <use href="${icons}#icon-arrow-right"></use>
             </svg>
         </button>
+        <button class="btn--inline">
+          <span>${numOfRestPage}</span>
+        </button>
+        `;
+    }
+
+    if (curPage < numPage) {
+      return `
+        <button data-goto=${
+          curPage + 1
+        } class="btn--inline page-btn pagination__btn--next">
+            <span>page ${curPage + 1}</span>
+            <svg class="search__icon">
+              <use href="${icons}#icon-arrow-right"></use>
+            </svg>
+        </button>
+        <button class="btn--inline">
+          <span>${numOfRestPage}</span>
+        </button>
+        <button data-goto=${
+          curPage - 1
+        } class="btn--inline page-btn pagination__btn--prev">
+            <svg class="search__icon">
+              <use href="${icons}#icon-arrow-left"></use>
+            </svg>
+            <span>Page ${curPage - 1}</span>
+        </button>
         `;
     }
 
     if (curPage === numPage && numPage > 1) {
+      numOfRestPage = "No more";
       return `
+        <button class="btn--inline">
+          <span>${numOfRestPage}</span>
+        </button>
+
         <button data-goto=${
           curPage - 1
-        } class="btn--inline pagination__btn--prev">
+        } class="btn--inline page-btn pagination__btn--prev">
             <svg class="search__icon">
               <use href="${icons}#icon-arrow-left"></use>
             </svg>
@@ -46,26 +79,6 @@ class PaginationView extends View {
           `;
     }
 
-    if (curPage < numPage) {
-      return `
-        <button data-goto=${
-          curPage + 1
-        } class="btn--inline pagination__btn--next">
-            <span>page ${curPage + 1}</span>
-            <svg class="search__icon">
-              <use href="${icons}#icon-arrow-right"></use>
-            </svg>
-        </button>
-        <button data-goto=${
-          curPage - 1
-        } class="btn--inline pagination__btn--prev">
-            <svg class="search__icon">
-              <use href="${icons}#icon-arrow-left"></use>
-            </svg>
-            <span>Page ${curPage - 1}</span>
-        </button>
-        `;
-    }
     return "";
   }
 }

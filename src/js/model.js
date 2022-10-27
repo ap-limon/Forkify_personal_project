@@ -58,6 +58,38 @@ export const loadSearchResults = async function (query) {
   }
 };
 
+export const filterByCT = async function (resultsArr) {
+  try {
+    const res = resultsArr.map(async (result) => {
+      const data = await AJAX(`${API}${result.id}?key=${KEY}`);
+      const recipe = createRecipeObject(data);
+      return recipe;
+    });
+    const recipes = await Promise.all(res);
+    state.search.results = recipes.sort(
+      (r1, r2) => r1.cooking_time - r2.cooking_time
+    );
+  } catch (err) {
+    console.error("🔥🔥🔥" + err);
+  }
+};
+
+export const filterByIng = async function (resultArr) {
+  try {
+    const res = resultArr.map(async (result) => {
+      const data = await AJAX(`${API}${result.id}?key=${KEY}`);
+      const recipe = createRecipeObject(data);
+      return recipe;
+    });
+    const recipes = await Promise.all(res);
+    state.search.results = recipes.sort(
+      (r1, r2) => r1.ingredients.length - r2.ingredients.length
+    );
+  } catch (err) {
+    console.error("🔥🔥🔥" + err);
+  }
+};
+
 export const loadRecipe = async function (id) {
   try {
     const data = await AJAX(`${API}${id}?key=${KEY}`);

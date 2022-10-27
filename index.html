@@ -37,7 +37,6 @@
             <span>Search</span>
           </button>
         </form>
-
         <!-- navbar section -->
         <nav class="nav">
           <ul class="nav__list">
@@ -93,6 +92,28 @@
 
       <!-- search result showing section -->
       <div class="search-results">
+        <div class="dropdown">
+          <!-- <button class="btn btn--small sort--btn">
+            <svg>
+              <use href="${icons}#icon-filter"></use>
+            </svg>
+            <span>Sort by</span>
+          </button>
+          <ul class="dropdown-list" id="dropdown">
+            <li>
+              <svg>
+                <use href="${icons}#icon-arrow-down"></use>
+              </svg>
+              <span>Cooking time Low to High</span>
+            </li>
+            <li>
+              <svg>
+                <use href="${icons}#icon-arrow-down"></use>
+              </svg>
+              <span>Ingredients Low to High</span>
+            </li>
+          </ul> -->
+        </div>
         <!-- results of search -->
         <ul class="results">
           <!-- <li class="preview">
@@ -280,13 +301,7 @@
         <div class="upload__column">
           <h3 class="upload__heading">Recipe Data</h3>
           <label for="title">Title</label>
-          <input 
-            type="text" 
-            name="title" 
-            id="title" 
-            value="Test" 
-            required 
-          />
+          <input type="text" name="title" id="title" value="Test" required />
 
           <label for="sourceUrl">URL</label>
           <input
