@@ -19,7 +19,7 @@
     "url": "https://github.com/ap-limon/Forkify_personal_project/issues"
   },
   "homepage": "https://github.com/ap-limon/Forkify_personal_project#readme",
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.18.2",
     "@babel/preset-env": "^7.18.2",
     "@squoosh/lib": "^0.4.0",
